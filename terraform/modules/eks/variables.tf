@@ -81,3 +81,38 @@ variable "node_max_unavailable" {
   default     = 1
 }
 
+variable "common_tags" {
+  description = "Common tags to be applied to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "cluster_iam_role_arn" {
+  description = "ARN of the IAM role to be assumed by the EKS cluster"
+  type        = string
+  default     = ""
+}
+
+variable "vpc_public_subnets" {
+  description = "List of public subnets"
+  type        = list(string)
+  default     = []
+}
+
+variable "eks_clusterpolicy_id" {
+  description = "ARN of the IAM role to be assumed by the EKS cluster"
+  type        = string
+  default     = ""
+}
+
+variable "eks_vpc_resource_controller_id" {
+  description = "ARN of the IAM role to be assumed by the EKS cluster"
+  type        = string
+  default     = ""
+}
+
+variable "eks_nodegroup_role_arn" {
+  description = "ARN of the IAM role to be assumed by the EKS cluster"
+  type        = string
+  default     = ""
+}

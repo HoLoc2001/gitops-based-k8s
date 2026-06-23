@@ -61,6 +61,21 @@ variable "vpc_single_nat_gateway" {
 }
 
 
+variable "common_tags" {
+  description = "Common tags to be applied to all resources"
+  type        = map(string)
+  default     = {}
+}
 
+variable "eks_cluster_name" {
+  description = "Name of the EKS cluster. Also used as a prefix in names of related resources."
+  type        = string
+  default     = "eksdemo"
+}
 
+variable "cluster_name" {
+  description = "Full name of the EKS cluster. Used as a prefix in names of related resources."
+  type        = string
+  default     = "devops-dev-eksdemo"
+}
 

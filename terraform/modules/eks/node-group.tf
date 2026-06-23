@@ -1,10 +1,10 @@
 # Create AWS EKS Node Group - Public
 resource "aws_eks_node_group" "eks_ng_public" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
-  node_group_name = "${local.name}-eks-ng-public"
+  node_group_name = "${var.cluster_name}-eks-ng-public"
 
-  node_role_arn = aws_iam_role.eks_nodegroup_role.arn
-  subnet_ids    = module.vpc.public_subnets
+  node_role_arn = var.eks_nodegroup_role_arn
+  subnet_ids    = var.vpc_public_subnets
 
   ami_type       = var.node_ami_type
   capacity_type  = var.node_capacity_type
@@ -26,11 +26,10 @@ resource "aws_eks_node_group" "eks_ng_public" {
   }
 
   depends_on = [
-    aws_iam_role_policy_attachment.eks-AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.eks-AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.eks-AmazonEC2ContainerRegistryReadOnly,
+    var.eks_clusterpolicy_id,
+    var.eks_vpc_resource_controller_id
   ]
 
-  tags     = local.common_tags
+  tags = var.common_tags
 
 }

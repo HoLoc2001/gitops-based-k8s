@@ -21,3 +21,8 @@ provider "helm" {
     token                  = data.aws_eks_cluster_auth.cluster.token
   }
 }
+
+provider "vault" {
+  address = var.vault_addr
+  token   = var.vault_token
+}

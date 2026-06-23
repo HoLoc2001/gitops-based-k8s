@@ -63,5 +63,38 @@ module "alb_controller" {
     module.eks,
     module.vpc
   ]
+}
 
+module "vault" {
+  source = "../../modules/vault"
+
+  cluster_name = var.cluster_name
+  aws_region   = var.aws_region
+  vpc_id       = module.vpc.vpc_id
+
+  depends_on = [
+    module.eks,
+    module.vpc,
+    module.alb_controller
+  ]
+
+}
+
+module "aurora" {
+  source = "../../modules/rds"
+
+  vault_addr                 = var.vault_addr
+  db_name                    = var.db_name
+  db_username                = var.db_username
+  private_subnet_ids         = module.vpc.private_subnets
+  vault_token                = var.vault_token
+  project_name               = var.project_name
+  vpc_id                     = module.vpc.vpc_id
+  eks_node_security_group_id = module.eks.cluster_primary_security_group_id
+
+  depends_on = [
+    module.eks,
+    module.vpc,
+    module.vault
+  ]
 }

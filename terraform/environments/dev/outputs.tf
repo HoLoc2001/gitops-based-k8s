@@ -77,3 +77,6 @@ output "node_group_public_version" {
   value       = module.eks.node_group_public_version
 }
 
+output "vault_addr" {
+  value = module.vault.vault_addr
+}

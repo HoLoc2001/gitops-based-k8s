@@ -171,3 +171,28 @@ variable "cluster_iam_role_arn" {
   type        = string
   default     = ""
 }
+
+variable "vault_addr" {
+  type    = string
+  default = "http://[IP_ADDRESS]"
+}
+
+variable "vault_token" {
+  type    = string
+  default = "root"
+}
+
+variable "db_name" {
+  type    = string
+  default = "appdb"
+}
+
+variable "db_username" {
+  type    = string
+  default = "appuser"
+}
+
+variable "project_name" {
+  type    = string
+  default = "devops"
+}

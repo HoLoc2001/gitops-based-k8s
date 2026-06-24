@@ -14,7 +14,9 @@ service:
 ingress:
   enabled: true
   className: alb
-  # host: my-app.example.com
+  # host: test.aws.com
+  path: /
+  pathType: Prefix
   
 env:
   NODE_ENV: production

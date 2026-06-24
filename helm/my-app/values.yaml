@@ -23,7 +23,7 @@ env:
 vault:
   enabled: true
   secretStoreName: vault-backend
-  path: secret/data/dev/aurora
+  path: dev/aurora
   refreshInterval: 1h
 
 serviceAccount:

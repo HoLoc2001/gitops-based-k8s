@@ -37,6 +37,15 @@ kubectl -n argocd get svc argocd-server
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
+## install external-secrets
+
+helm repo add external-secrets https://charts.external-secrets.io
+helm repo update
+
+helm install external-secrets external-secrets/external-secrets \
+  -n external-secrets \
+  --create-namespace
+
 
 ## deploy my-app using ArgoCD
 kubectl create namespace my-app

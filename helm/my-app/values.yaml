@@ -25,3 +25,8 @@ vault:
   secretStoreName: vault-backend
   path: secret/data/dev/aurora
   refreshInterval: 1h
+
+serviceAccount:
+  create: false
+  name: default
+  annotations: {}

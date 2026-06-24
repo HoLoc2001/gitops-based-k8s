@@ -13,7 +13,7 @@ terraform apply --auto-approve
 
 ## connect to EKS Cluster
 
-aws eks update-kubeconfig --region <aws_region> --name <your-cluster-name>
+aws eks update-kubeconfig --region ap-southeast-1 --name eks-lab
 
 kubectl get nodes
 

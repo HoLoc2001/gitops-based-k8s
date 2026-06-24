@@ -5,7 +5,7 @@ output "vault_addr" {
 resource "time_sleep" "wait_120_seconds" {
   depends_on = [helm_release.vault]
 
-  create_duration = "1s"
+  create_duration = "120s"
 }
 
 data "kubernetes_service_v1" "vault_lb" {
@@ -19,6 +19,5 @@ data "kubernetes_service_v1" "vault_lb" {
 
 
 output "vault_url" {
-  value       = "http://${data.kubernetes_service_v1.vault_lb.status[0].load_balancer[0].ingress[0].hostname}:8200"
-  description = "Đường dẫn truy cập vào Vault UI công khai"
+  value = "http://${data.kubernetes_service_v1.vault_lb.status[0].load_balancer[0].ingress[0].hostname}:8200"
 }

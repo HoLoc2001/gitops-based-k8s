@@ -4,6 +4,11 @@ output "cluster_id" {
   value       = module.eks.cluster_id
 }
 
+output "cluster_name" {
+  description = "The name/id of the EKS cluster."
+  value       = module.eks.cluster_name
+}
+
 output "cluster_arn" {
   description = "The Amazon Resource Name (ARN) of the cluster."
   value       = module.eks.cluster_arn
@@ -79,4 +84,9 @@ output "node_group_public_version" {
 
 output "vault_addr" {
   value = module.vault.vault_addr
+}
+
+output "vault_url" {
+  value       = module.vault.vault_url
+  description = "URL truy cập Vault"
 }

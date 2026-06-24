@@ -36,3 +36,8 @@ kubectl patch svc -n argocd argocd-server -p '{"spec": {"type": "LoadBalancer"}}
 kubectl -n argocd get svc argocd-server
 
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+
+## deploy my-app using ArgoCD
+kubectl create namespace my-app
+kubectl apply -f argocd/my-app.yaml

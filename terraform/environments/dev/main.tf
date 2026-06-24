@@ -83,7 +83,7 @@ module "vault" {
 module "aurora" {
   source = "../../modules/rds"
 
-  vault_addr                 = var.vault_addr
+  vault_addr                 = module.vault.vault_url
   db_name                    = var.db_name
   db_username                = var.db_username
   private_subnet_ids         = module.vpc.private_subnets

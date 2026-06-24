@@ -43,15 +43,14 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           driver: docker-container
-          
+
       - name: Build and push multi-arch image
         run: |
           AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           IMAGE_REPOSITORY=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_REGION}.amazonaws.com/eks/${ECR_REPOSITORY}
           IMAGE_URI=$IMAGE_REPOSITORY:${IMAGE_TAG}
 
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE_URI ./app
-          docker push $IMAGE_URI
+          docker buildx build --platform linux/amd64,linux/arm64 --push -t $IMAGE_URI ./app
 
           echo "IMAGE_REPOSITORY=$IMAGE_REPOSITORY" >> $GITHUB_ENV
 

@@ -58,84 +58,79 @@ kubectl create namespace my-app
 kubectl apply -f argocd/my-app.yaml
 
 
-flowchart TD
-    Dev[Developer] --> GitLab[GitLab Repository]
+### 🏗️ System Architecture & GitOps Workflow
 
-    GitLab --> CI[GitLab CI/CD]
-    CI --> Docker[Build Docker Image]
-    Docker --> ECR[AWS ECR]
+```mermaid
+flowchart TB
+    %% --- STYLING MACROS ---
+    classDef ci font-weight:bold,fill:#f6f8fa,stroke:#d0d7de,stroke-width:2px;
+    classDef aws font-weight:bold,fill:#FF9900,stroke:#232F3E,stroke-width:2px,color:white;
+    classDef eks font-weight:bold,fill:#326CE5,stroke:#1f4da1,stroke-width:2px,color:white;
+    classDef tool font-weight:bold,fill:#8A2BE2,stroke:#4B0082,stroke-width:2px,color:white;
+    classDef user font-weight:bold,fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:white;
 
-    GitLab --> Terraform[Terraform]
-    Terraform --> VPC[AWS VPC]
-    Terraform --> EKS[AWS EKS Cluster]
-    Terraform --> Aurora[Aurora PostgreSQL]
-    Terraform --> Vault[HashiCorp Vault]
-
-    GitLab --> ArgoCD[Argo CD]
-
-    ArgoCD --> Helm[Helm Chart]
-    Helm --> App[Application Pods]
-
-    EKS --> ALBController[AWS Load Balancer Controller]
-    ALBController --> ALB[Application Load Balancer]
-
-    User[User / Browser] --> ALB
-    ALB --> Ingress[Kubernetes Ingress]
-    Ingress --> Service[Kubernetes Service]
-    Service --> App
-
-    App --> Secret[ExternalSecret]
-    Secret --> Vault
-    Vault --> AuroraSecret[Aurora DB Credentials]
-    App --> Aurora
-
-    App --> Logs[Application Logs]
-    Logs --> Loki[Loki]
-    Loki --> Grafana[Grafana Dashboard & Alerts]
-
-    subgraph AWS[AWS Cloud]
-        VPC
-        EKS
-        Aurora
-        ECR
-        ALB
+    %% --- SUBGRAPH: CI/CD & SOURCE ---
+    subgraph CI_CD ["📦 DevOps Pipeline (GitOps)"]
+        Dev["👨‍💻 Developer"]
+        GitHub["🐙 GitHub Repo\n(Source & Helm)"]
+        GHA["⚙️ GitHub Actions"]
+        
+        Dev -->|Push / Release| GitHub
+        GitHub -->|Trigger Workflow| GHA
     end
+    class GitHub,GHA ci; class Dev user;
 
-    subgraph Kubernetes[EKS Kubernetes Cluster]
-        ArgoCD
-        ALBController
-        Ingress
-        Service
-        App
-        Secret
-        Loki
-        Grafana
+    %% --- SUBGRAPH: AWS INFRASTRUCTURE ---
+    subgraph AWS ["☁️ Amazon Web Services"]
+        VPC["🌐 AWS VPC"]
+        ECR["📦 Amazon ECR"]
+        ALB["🎯 AWS ALB"]
+        Aurora["🗄️ Aurora PostgreSQL"]
+        
+        %% --- SUBGRAPH: EKS CLUSTER ---
+        subgraph EKS_Cluster ["☸️ EKS Kubernetes Cluster"]
+            ArgoCD["🐙 Argo CD\n(GitOps Controller)"]
+            ALBController["🔧 AWS LB Controller"]
+            
+            subgraph App_Stack ["🚀 Application Stack"]
+                Ingress["🛣️ K8s Ingress"]
+                Service["🔌 K8s Service"]
+                Deployment["📦 K8s Deployment"]
+                ExtSecret["🔑 External Secrets"]
+            end
+        end
     end
+    class AWS,VPC,ECR,ALB,Aurora aws;
+    class EKS_Cluster,ArgoCD,ALBController,Ingress,Service,Deployment,ExtSecret eks;
 
-flowchart LR
-    User[User / Browser] --> ALB[Application Load Balancer]
-    ALB --> K8s[EKS Ingress Controller]
-    K8s --> App[Application Pods]
-    App --> Vault[Vault Agent Sidecar]
-    Vault --> VaultAPI[Vault API]
-    VaultAPI --> Secret[External Secrets Operator]
-    Secret --> SecretStore[AWS Secrets Manager]
-    App --> DB[PostgreSQL]
-    DB --> DBSubnet[DB Subnet]
-    ALB --> PublicSubnet[Public Subnet]
-    App --> AppSubnet[Private App Subnet]
-    Vault --> VaultSubnet[Vault Subnet]
+    %% --- OUTSIDE TOOLS ---
+    Terraform["🏗️ Terraform (IaC)"]
+    Vault["🔒 HashiCorp Vault"]
+    User["🌐 Internet User"]
+    class Terraform,Vault tool; class User user;
 
-    style User fill:#f9f,stroke:#333,stroke-width:2px
-    style ALB fill:#ff9,stroke:#333,stroke-width:2px
-    style K8s fill:#9cf,stroke:#333,stroke-width:2px
-    style App fill:#9f9,stroke:#333,stroke-width:2px
-    style Vault fill:#f9f,stroke:#333,stroke-width:2px
-    style VaultAPI fill:#ffc,stroke:#333,stroke-width:2px
-    style Secret fill:#cfc,stroke:#333,stroke-width:2px
-    style SecretStore fill:#fcc,stroke:#333,stroke-width:2px
-    style DB fill:#ccf,stroke:#333,stroke-width:2px
-    style DBSubnet fill:#ddd,stroke:#333,stroke-width:2px
-    style PublicSubnet fill:#ddd,stroke:#333,stroke-width:2px
-    style AppSubnet fill:#ddd,stroke:#333,stroke-width:2px
-    style VaultSubnet fill:#ddd,stroke:#333,stroke-width:2px
+    %% --- INFRASTRUCTURE PROVISIONING (TERRAFORM) ---
+    Terraform ----> VPC
+    Terraform ----> EKS_Cluster
+    Terraform ----> Aurora
+    Terraform ----> Vault
+    Terraform -->|Deploy via Helm/Manifest| ArgoCD
+    Terraform -->|Deploy| ALBController
+
+    %% --- CI/CD FLOW ---
+    GHA -->|1. Build & Push Image| ECR
+    GHA -->|2. Update Tag values.yaml| GitHub
+    GitHub -->|3. Auto Sync| ArgoCD
+    ArgoCD -->|4. Deploy Manifests| Deployment
+
+    %% --- TRAFFIC FLOW ---
+    User -->|HTTP/HTTPS| ALB
+    ALBController <-->|Manage| ALB
+    ALB --> Ingress
+    Ingress --> Service
+    Service --> Deployment
+
+    %% --- DATA & SECURITY FLOW ---
+    Deployment --> ExtSecret
+    ExtSecret -->|Fetch Secrets| Vault
+    Deployment -->|Database Connection| Aurora

@@ -1,12 +1,13 @@
 # GitOps-Based Kubernetes Deployment Platform
 
 [![Terraform](https://img.shields.io/badge/IaC-Terraform-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![Helm](https://img.shields.io/badge/Package-Helm-0F1689?logo=helm&logoColor=white)](https://helm.sh/)
 [![Kubernetes](https://img.shields.io/badge/Orchestration-Kubernetes-326CE5?logo=kubernetes&logoColor=white)](https://kubernetes.io/)
 [![AWS](https://img.shields.io/badge/Cloud-AWS-232F3E?logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
 [![ArgoCD](https://img.shields.io/badge/GitOps-ArgoCD-F3C63F?logo=argo&logoColor=white)](https://argoproj.github.io/cd/)
 [![HashiCorp Vault](https://img.shields.io/badge/Secrets-Vault-FFEC6E?logo=hashicorp-vault&logoColor=black)](https://www.vaultproject.io/)
 
-A production-grade, GitOps-driven container deployment platform built on **Amazon EKS (Elastic Kubernetes Service)**. This project demonstrates automated multi-arch **CI/CD via GitHub Actions**, declarative configuration synchronization with **ArgoCD**, secure secrets management using **HashiCorp Vault** & **External Secrets Operator (ESO)**, and a managed high-availability **Amazon Aurora PostgreSQL** database.
+A production-grade, GitOps-driven container deployment platform built on **Amazon EKS (Elastic Kubernetes Service)**. This project demonstrates automated multi-arch **CI/CD via GitHub Actions**, application packaging with **Helm**, declarative configuration synchronization with **ArgoCD**, secure secrets management using **HashiCorp Vault** & **External Secrets Operator (ESO)**, and a managed high-availability **Amazon Aurora PostgreSQL** database.
 
 ---
 

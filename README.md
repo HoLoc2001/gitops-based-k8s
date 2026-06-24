@@ -46,6 +46,12 @@ helm install external-secrets external-secrets/external-secrets \
   -n external-secrets \
   --create-namespace
 
+kubectl create secret generic vault-token \
+  -n external-secrets \
+  --from-literal=token="<VAULT_TOKEN>"
+
+kubectl apply -f aws/external-secrets/vault-backend.yaml
+
 
 ## deploy my-app using ArgoCD
 kubectl create namespace my-app

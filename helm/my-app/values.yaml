@@ -30,3 +30,8 @@ serviceAccount:
   create: false
   name: default
   annotations: {}
+
+httpRoute:
+  enabled: false
+  parentRefs: []
+  hostnames: []
